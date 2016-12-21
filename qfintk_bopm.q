@@ -1,4 +1,3 @@
-/ BOPM models in q
 EU:{[s0;pu;pd;N;r;dv;iscall]
 			/ European pricing
 			M:1+N;  / Number of terminal nodes of tree
@@ -36,6 +35,20 @@ CRR:{[dummy]
 			TREE[iscall];
 	};
 
+LR:{[dummy]
+	$[1=N mod 2;oddN:N;oddN:N+1];
+	d1:(log(s0%K)+((r-dv)+(sd*sd)%2.0)*T)%(sd*sqrt T);
+	d2:(log(s0%K)+((r-dv)-(sd*sd)%2.0)*T)%(sd*sqrt T);
+	pp2inversion:{[z;n]0.5+$[z<0;-1;1]*sqrt(0.25-0.25*exp(-((z%(n+1.0%3.0+0.1%(n+1))) xexp 2 )*(n+1.0/0.6)))};
+	pbar:pp2inversion[d1;oddN];
+	p:pp2inversion[d2;oddN];
+	u:(1%df)*(pbar*p);
+	d:((1%df)-(p*u))%p;
+	qu:p;
+	qd:1-qu;
+	TREE[iscall];
+	};
+
 TREE:{[iscall]
 			/ All tree related functionality here
 			show "TREE";
@@ -47,7 +60,6 @@ TREE:{[iscall]
 			/ Initialize payoffs
 			payoffs::0.0;
 			$[iscall=1;payoffs::0|(STs[N]-K);payoffs::0|(K-STs[N])];
-			show kumar;
 			show "-------";
 			show payoffs;
 			show "-------";
@@ -64,8 +76,6 @@ TREE:{[iscall]
 
 	};
 
-  
-/ Just testing code
 main:{[dummy]
 	s0::50f;
 	pu::0.2;
