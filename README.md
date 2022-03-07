@@ -1,2 +1,2 @@
 # qfintk
-Financial Engineering and Computational Finance code in q/KDB+
+Financial engineering and computational finance code in q/KDB+
